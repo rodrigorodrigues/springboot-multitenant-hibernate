@@ -1,5 +1,5 @@
 GET localhost:8080/person
-X-TenantID: user1
+X-TenantID: user2
 
 ###
 
@@ -9,4 +9,19 @@ X-TenantID: user2
 
 {
   "name": "John2"
+}
+
+###
+
+GET localhost:8181/person
+X-TenantID: vmware
+
+###
+
+POST localhost:8181/person
+Content-Type: application/json
+X-TenantID: vmware
+
+{
+  "name": "Test VMWARE"
 }

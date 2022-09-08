@@ -10,11 +10,11 @@ import java.util.Optional;
 
 @Component
 public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver, HibernatePropertiesCustomizer {
-    private static final String UNKNOWN = "unknown";
+    public static final String GENERIC_SCHEMA = "generic";
 
     @Override
     public String resolveCurrentTenantIdentifier() {
-        return Optional.ofNullable(TenantContext.getTenantInfo()).orElse(UNKNOWN);
+        return Optional.ofNullable(TenantContext.getTenantInfo()).orElse(GENERIC_SCHEMA);
     }
 
     @Override

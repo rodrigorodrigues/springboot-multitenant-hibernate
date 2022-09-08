@@ -1,14 +1,14 @@
 package com.example.springbootmultitenanthibernate;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class PersonController {
@@ -16,8 +16,14 @@ public class PersonController {
 
     @GetMapping("/person")
     @Transactional(readOnly = true)
-    public Page<PersonDto> person(Pageable pageable) {
-        return personRepository.people(pageable);
+    public Page<PersonDto> person(Pageable pageable, @RequestParam(name = "name", required = false) String name) {
+        log.info("pageable: {}", pageable);
+        if (StringUtils.hasLength(name)) {
+            return personRepository.findPersonByName(name, pageable)
+                    .map(p -> new PersonDto(p.getId(), p.getName(), p.getTenant()));
+        } else {
+            return personRepository.people(pageable);
+        }
     }
 
     @PostMapping("/person")

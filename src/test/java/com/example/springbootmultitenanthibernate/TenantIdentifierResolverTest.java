@@ -1,11 +1,13 @@
 package com.example.springbootmultitenanthibernate;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -32,6 +34,11 @@ class TenantIdentifierResolverTest {
         personRepository.deleteAll();
         TenantContext.setTenantInfo(VMWARE);
         personRepository.deleteAll();
+    }
+
+    @AfterEach
+    void tearDown() {
+        personRepository.deleteAllRegardlessOfTenant();
     }
 
     @Test
@@ -80,10 +87,10 @@ class TenantIdentifierResolverTest {
         createPerson(VMWARE, "Eve");
 
         TenantContext.setTenantInfo(VMWARE);
-        assertThat(personRepository.findJpqlByName("Adam").getTenant()).isEqualTo(VMWARE);
+        assertThat(personRepository.findPersonByName("Adam", PageRequest.ofSize(10)).getContent().get(0).getTenant()).isEqualTo(VMWARE);
 
         TenantContext.setTenantInfo(PIVOTAL);
-        assertThat(personRepository.findJpqlByName("Eve")).isNull();
+        assertThat(personRepository.findPersonByName("Eve", PageRequest.ofSize(10)).getContent()).isEmpty();
     }
 
     @Test

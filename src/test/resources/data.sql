@@ -1,0 +1,2 @@
+insert into generic.person (id, tenant, name) values(NEXTVAL('generic.person_seq'), 'CustomerA', 'Test Customer A');
+insert into generic.person (id, tenant, name) values(NEXTVAL('generic.person_seq'), 'CustomerB', 'Test Customer B');
