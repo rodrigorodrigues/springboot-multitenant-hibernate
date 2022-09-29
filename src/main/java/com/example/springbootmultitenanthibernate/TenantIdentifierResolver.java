@@ -1,20 +1,24 @@
 package com.example.springbootmultitenanthibernate;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Optional;
 
-@Component
+@Slf4j
+@AllArgsConstructor
 public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver, HibernatePropertiesCustomizer {
-    public static final String GENERIC_SCHEMA = "generic";
+    private final MultipleDataSourcesProperties multipleDataSourcesProperties;
 
     @Override
     public String resolveCurrentTenantIdentifier() {
-        return Optional.ofNullable(TenantContext.getTenantInfo()).orElse(GENERIC_SCHEMA);
+        String tenantIdentifier = Optional.ofNullable(TenantContext.getTenantInfo()).orElse(multipleDataSourcesProperties.getGenericSchema());
+        log.info("tenantIdentifier: {}", tenantIdentifier);
+        return tenantIdentifier;
     }
 
     @Override

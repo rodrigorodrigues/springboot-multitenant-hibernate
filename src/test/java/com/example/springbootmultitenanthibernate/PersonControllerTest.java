@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.util.AssertionErrors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -25,9 +26,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
+@ContextConfiguration(initializers = Application.MultipleDataSourcesInitializer.class)
 @AutoConfigureMockMvc
 class PersonControllerTest {
     public static final String X_TENANT_ID = "X-TenantID";
+    public static final String X_DATASOURCE_ID = "X-DatasourceID";
+
     @Autowired
     MockMvc mockMvc;
 
@@ -45,11 +49,11 @@ class PersonControllerTest {
         mockMvc.perform(get("/person").header(X_TENANT_ID, "CustomerA"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[*]", hasSize(1)))
-                .andExpect(jsonPath("$.content[0].name").value("Test Customer A"));
+                .andExpect(jsonPath("$.content[0].name").value("Test Customer A - H2"));
 
         mockMvc.perform(get("/person").header(X_TENANT_ID, "CustomerB"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].name").value("Test Customer B"));
+                .andExpect(jsonPath("$.content[0].name").value("Test Customer B - H2"));
 
         mockMvc.perform(get("/person").header(X_TENANT_ID, "CustomerC"))
                 .andExpect(status().isOk())

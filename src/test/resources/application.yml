@@ -1,0 +1,9 @@
+datasource:
+  multiple:
+    genericSchema: test
+spring:
+  jpa:
+    show-sql: true
+  sql:
+    init:
+      platform: "h2"

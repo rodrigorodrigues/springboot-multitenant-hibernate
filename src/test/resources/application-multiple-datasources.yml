@@ -1,0 +1,80 @@
+datasource:
+  multiple:
+    defaultDatabase: ORACLE
+    genericSchema: test
+    jpaPropertiesMap:
+      'POSTGRESQL':
+        hibernate:
+          default_schema: test
+          show_sql: true
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+      'MYSQL':
+        hibernate:
+#          default_schema: test
+          show_sql: true
+          dialect: org.hibernate.dialect.MySQLDialect
+      'ORACLE':
+        hibernate:
+          default_schema: test
+          show_sql: true
+          dialect: org.hibernate.dialect.OracleDialect
+      'H2':
+        hibernate:
+#          default_schema: test
+          show_sql: true
+          dialect: org.hibernate.dialect.H2Dialect
+    map:
+      'POSTGRESQL':
+        url: jdbc:tc:postgresql:13.2:////test?TC_INITSCRIPT=schema-postgresql.sql
+        driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+      'MYSQL':
+        url: jdbc:tc:mysql:5.7.34:////test?user=root?password=?TC_INITSCRIPT=schema-mysql.sql
+        driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+      'ORACLE':
+        url: jdbc:tc:oracle:////XEPDB1?user=test?password=test?TC_INITSCRIPT=schema-oracle.sql
+        driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+      'H2':
+        url: jdbc:h2:mem:testdb;INIT=RUNSCRIPT FROM 'classpath:schema-h2.sql';DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=true
+        password: password
+        username: sa
+        driver-class-name: org.h2.Driver
+
+#        url: jdbc:oracle:thin:@(description=(address=(host=localhost)(protocol=tcp)(port=1521))(connect_data=(service_name=XEPDB1)))
+#        username: system
+#        password: test_oracle
+#        url: jdbc:tc:oracle:18.4.0-slim:////XEPDB1
+
+#spring:
+#  batch:
+#    jdbc:
+#      initialize-schema: always
+#  jpa:
+#    hibernate:
+#spring:
+#  jpa:
+#    properties:
+#      hibernate:
+#        default_schema: test
+#        show_sql: true
+#        tenant_identifier_resolver: com.example.springbootmultitenanthibernate.TenantIdentifierResolver
+#        multi_tenant_connection_provider: com.example.springbootmultitenanthibernate.ExampleConnectionProvider
+
+#        dialect: org.hibernate.dialect.MySQLDialect
+#    hibernate:
+#      ddl-auto: create-drop
+#spring:
+#  jpa:
+#    hibernate:
+#      ddl-auto: create-drop
+#    show-sql: true
+#    defer-datasource-initialization: true
+#  sql:
+#    init:
+#      mode: always
+#      platform: "mysql"
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+    org.hibernate.type: trace
+    net.ttddyy.dsproxy.listener: trace
